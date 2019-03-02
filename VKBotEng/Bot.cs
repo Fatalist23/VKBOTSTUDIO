@@ -5,13 +5,14 @@ using VkNet;
 using VkNet.Model;
 using VkNet.Model.RequestParams;
 using VkNet.Enums.SafetyEnums;
+using VkNet.Model.Keyboard;
 
 namespace VKBotEng
 {
     class Bot
     {
         private VkApi VkData;
-
+        private uint UserId;
 
          public Bot()
         {
@@ -20,7 +21,47 @@ namespace VKBotEng
            
         }
 
+         public string GetMessages(GetConversationsParams Params)
+         {
+            
+            return GetMessageText(VkData.Messages.GetConversations(Params));
+         }
 
+         public string GetMessageText(GetConversationsResult Messages)
+         {
+             UserId = (uint)Messages.Items[0].LastMessage.FromId;
+             return Messages.Items[0].LastMessage.Text;
+         }
+
+         public void MessageCheck(string Message)
+         {
+             switch (Message)
+             {
+                case "Старт": break;
+
+                default: break;
+             }
+         }
+
+         private MessageKeyboard GenerateKeyBoard(KeyboardButtonColor KeyColor,string[] args)
+         {
+            KeyboardBuilder Builder = new KeyboardBuilder();
+             foreach (var Key in args)
+             {
+                 Builder.AddButton(Key, "smth", KeyColor);
+             }
+
+             return Builder.Build();
+         }
+
+         public void SendMessage(string MessageText)
+         {
+             VkData.Messages.Send(new MessagesSendParams { UserId = UserId, Message = MessageText, RandomId = new Random().Next(100, 1000000000) });
+         }
+         public void SendMessage(string MessageText,MessageKeyboard Board)
+         {
+             VkData.Messages.Send(new MessagesSendParams { UserId = UserId,Keyboard = Board, Message = MessageText, RandomId = new Random().Next(100, 1000000000) });
+         }
 
     }
 }

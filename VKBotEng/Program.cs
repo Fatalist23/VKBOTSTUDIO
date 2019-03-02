@@ -1,4 +1,5 @@
 ﻿using System;
+using VkNet.Model.RequestParams;
 
 
 namespace VKBotEng
@@ -8,11 +9,12 @@ namespace VKBotEng
         static void Main(string[] args)
         {
             Bot VK = new Bot();
-            foreach (var mes in VK.GetMessages())
+            while (true)
             {
-                Console.WriteLine(mes);
+               Console.WriteLine( VK.GetMessages(new GetConversationsParams()));
             }
-
+           
+            Bot AK = new Bot();
             Console.ReadLine();
 
         }
